@@ -1,11 +1,23 @@
+drop table if exists session;
+create table if not exists workouts (
+    id serial primary key
+    , day date not null
+);
+
 drop table if exists lifts;
 create table if not exists lifts (
     id serial primary key
+    , workout serial references workouts(id)
     , name text not null
-    , day date not null
-    , sets int not null
-    , reps int not null
+    , lift_ord int not null
+    , workout_ord int not null
+);
+
+drop table if exists sets;
+create table if not exists sets (
+    id serial primary key
+    , set_count int not null
+    , rep_count int not null
     , notes text not null
-    , set_ord int not null
-    , day_ord int not null
-)
+    , lift_ord int not null
+);
