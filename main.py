@@ -4,7 +4,6 @@ import re
 
 @app.route('/lift/<lift>', methods = ['GET', 'POST'])
 def lift_type(lift):
-    success_post = request.get_json(force=True)
     if request.method == 'POST':
         return success_post
     else:
