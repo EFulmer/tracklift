@@ -18,8 +18,7 @@ create table if not exists sets (
     id serial primary key
     , set_count int not null
     , rep_count int not null
-    , start_weight int not null
-    , end_weight int not null
+    , weight int not null
     , notes text not null
     , lift_ord int not null
 );
