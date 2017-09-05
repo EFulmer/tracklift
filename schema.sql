@@ -8,6 +8,7 @@ drop table if exists lifts;
 create table if not exists lifts (
     id serial primary key
     , workout serial references workouts(id)
+    , warm_up boolean not null
     , name text not null
     , lift_ord int not null
     , workout_ord int not null
