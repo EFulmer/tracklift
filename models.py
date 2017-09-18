@@ -12,6 +12,7 @@ class Workouts(Base):
     
     id = Column(Integer, primary_key = True)
     day = Column(Date, nullable = False)
+
     get_pumped = relationship("Lifts", back_populates =  "workouts")
 
 class Lifts(Base):
@@ -23,7 +24,7 @@ class Lifts(Base):
     name = Column(Text, nullable = False)
     lift_ord = Column(Integer, nullable = False)
     workout_ord = Column(Integer, nullable = False)
-    
+
     lifts = relationship("Lifts", back_populates = "get_pumped")
     milk_for_babies = relationship("Sets", back_populates = "lifts")
 
@@ -35,7 +36,7 @@ class Sets(Base):
     set_count = Column(Integer, nullable = False)
     rep_count = Column(Integer, nullable = False)
     weight = Column(Integer, nullable = False)
-    notes = Column(Text, nullable = False)
+    notes = Column(Text, nullable = True)
     lift_ord = Column(Integer, nullable = False)
 
     sets = relationship("Sets", back_populates = "milk_for_babies")
