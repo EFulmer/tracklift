@@ -1,12 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, Text, Date
-from squlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import models
 import psycopg2
 from config import config
 
-def connect ():
+def connect():
     """Connect to the PostgreSQL database server"""
     conn = create_engine('postgresql+psycopg2://localhost/tracklift')
     try:
@@ -22,6 +22,7 @@ def connect ():
 
         Session = sessionmaker(conn)
         session = Session()
+
 # insert data into the table
         leg_day = Workouts(id=0, Date = 1111-22-33)
         squats = Lifts(id=0, workout=0, warm_up=True, name= "Squat", lift_ord=1,
@@ -31,14 +32,20 @@ def connect ():
         session.add(squats)
         session.add(set_rep)
 
+# read data that was inserted
+        workouts = session.query(Workouts)
+        for workout in workouts:
+            print(workout.id)
+
+
     # close connection with server
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print (error)
-    finally:
-        if conn is not None:
-            conn.close()
-            print ('Database connection closed. Goodbye.')
+#    finally:
+#        if conn is not None:
+#            conn.close()
+#            print ('Database connection closed. Goodbye.')
 
 if __name__ == '__main__':
     connect()
