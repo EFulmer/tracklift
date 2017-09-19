@@ -13,7 +13,7 @@ class Workouts(Base):
     id = Column(Integer, primary_key = True)
     day = Column(Date, nullable = False)
 
-    get_pumped = relationship("Lifts", back_populates =  "workouts")
+    get_pumped = relationship("Lifts", back_populates =  "session")
 
 class Lifts(Base):
     __tablename__ = 'lifts'
@@ -25,7 +25,7 @@ class Lifts(Base):
     lift_ord = Column(Integer, nullable = False)
     workout_ord = Column(Integer, nullable = False)
 
-    lifts = relationship("Lifts", back_populates = "get_pumped")
+    session = relationship("Workouts", back_populates = "get_pumped")
     milk_for_babies = relationship("Sets", back_populates = "lifts")
 
 class Sets(Base):
@@ -39,4 +39,4 @@ class Sets(Base):
     notes = Column(Text, nullable = True)
     lift_ord = Column(Integer, nullable = False)
 
-    sets = relationship("Sets", back_populates = "milk_for_babies")
+    lifts = relationship("Lifts", back_populates = "milk_for_babies")
