@@ -1,6 +1,18 @@
 from flask import Flask, request
 app = Flask(__name__)
 import re
+import psycopg
+import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, Text, Date
+from sqlalchemy.orm import sessionmaker
+from models import Workouts, Lifts, Sets
+
+db_string = "postgresql+psycopg2://localhost/tracklift"
+db = create_engine(db_string)
+
+Session = sessionmaker(db)
+session = Session()
 
 @app.route('/lift/<lift>', methods = ['GET', 'POST'])
 def lift_type(lift):
@@ -16,7 +28,4 @@ def date_check(date):
     else:
         return 'Date invalid, please use "YYYY-MM-DD" format'
 
-# The next step is to add sets, reps, weight to the lift_type function.
-# We want the lift_type function to be a POST only
-# We want the date_check to be GET only
-# See Slack for what the eventual JSON response will be for lift_type
+

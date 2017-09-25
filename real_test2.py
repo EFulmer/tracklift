@@ -14,11 +14,11 @@ db = create_engine(db_string)
 Session = sessionmaker(db)
 session = Session()
 
- # connect to the PostgreSQL server
- print ('Connecting to the PostgreSQL database...')
+# connect to the PostgreSQL server
+print ('Connecting to the PostgreSQL database...')
 
 # create
-leg_day = Workouts(id=0, Date = 1111-22-33)
+leg_day = Workouts(id=0, day = '2017-2-3')
 squats = Lifts(id=0, workout=0, warm_up=True, name= "Squat", lift_ord=1,
         workout_ord=1)
 set_rep = Sets(id=0, lift=0, set_count=1, rep_count=1, weight=200, lift_ord =1)

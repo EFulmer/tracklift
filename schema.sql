@@ -21,6 +21,6 @@ create table if not exists sets (
     , set_count int not null
     , rep_count int not null
     , weight int not null
-    , notes text not null
+    , notes text
     , lift_ord int not null
 );
