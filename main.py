@@ -1,15 +1,19 @@
 from flask import Flask, request
-app = Flask(__name__)
 import re
-import psycopg
+import psycopg2
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, Text, Date
 from sqlalchemy.orm import sessionmaker
 from models import Workouts, Lifts, Sets
+from flask_sqlalchemy import SQLAlchemy
 
-db_string = "postgresql+psycopg2://localhost/tracklift"
-db = create_engine(db_string)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'localhost://tracklift'
+db = SQLAlchemy(app)
+
+#db_string = "postgresql+psycopg2://localhost/tracklift"
+#db = create_engine(db_string)
 
 Session = sessionmaker(db)
 session = Session()
@@ -28,4 +32,5 @@ def date_check(date):
     else:
         return 'Date invalid, please use "YYYY-MM-DD" format'
 
-
+if __name__ == '__main__':
+    app.run()
