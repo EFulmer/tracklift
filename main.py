@@ -7,23 +7,31 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, Text, Date
 from sqlalchemy.orm import sessionmaker
 from models import Workouts, Lifts, Sets
 from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'localhost://tracklift'
-db = SQLAlchemy(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'localhost://tracklift'
+# db = SQLAlchemy(app)
 
-#db_string = "postgresql+psycopg2://localhost/tracklift"
-#db = create_engine(db_string)
+db_string = "postgresql+psycopg2://localhost/tracklift"
+engine = create_engine(db_string)
 
-Session = sessionmaker(db)
+Session = sessionmaker(bind = engine)
 session = Session()
 
-@app.route('/lift/<lift>', methods = ['GET', 'POST'])
-def lift_type(lift):
-    if request.method == 'POST':
-        return success_post
-    else:
-        return 'Lift = %s' % lift
+@app.route('/workouts/<id>/', methods = ['GET', 'POST', 'PUT', 'DELETE'])
+def workout_query(id):
+    if request.method == 'GET':
+        for workout in session.query(Workouts):
+            return jsonify(id = str(workout.id), day = str(workout.day))
+
+@app.route('/lifts/<id>/', methods = ['GET', 'POST', 'PUT', 'DELETE'])
+def lift_query(id):
+    if request.method == 'GET':
+        for lift in session.query(Lifts):
+            return str((lift.name))
+
+
 
 @app.route('/date/<date>')
 def date_check(date):
@@ -33,4 +41,4 @@ def date_check(date):
         return 'Date invalid, please use "YYYY-MM-DD" format'
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
