@@ -25,7 +25,8 @@ class Lifts(Base):
     lift_ord = Column(Integer, nullable = False)
 #    workout_ord = Column(Integer, nullable = False)
 
-    session = relationship("Workouts", back_populates = "lifts_relate")
+    session = relationship("Workouts", cascade = "all, delete-orphan" \
+            , single_parent=True, back_populates = "lifts_relate")
     sets_relate = relationship("Sets", back_populates = "lifts")
 
 class Sets(Base):
@@ -40,4 +41,5 @@ class Sets(Base):
     notes = Column(Text, nullable = True)
     set_ord = Column(Integer, nullable = False)
 
-    lifts = relationship("Lifts", back_populates = "sets_relate")
+    lifts = relationship("Lifts", cascade = "all, delete-orphan" \
+            , single_parent=True,  back_populates = "sets_relate")
