@@ -41,7 +41,10 @@ def workout_query(id):
     elif request.method == 'DELETE':
         delete_result = session.query(Workouts).filter_by(id=id).first()
         # TODO: add foreign keys
-        session.query(Workouts).filter_by(id=id).delete()
+        # delete_result_lift = session.query(Lifts).filter_by(id=delete_result.id))
+        # delete_result_set = session.query(Sets).filter_by(id=delete_result_lift.id)
+        # session.query(Workouts).filter_by(id=id).delete()
+        session.delete(delete_result)
         session.commit()
         return jsonify({"id":str(delete_result.id),"day":str(delete_result.day)})
 
@@ -81,6 +84,7 @@ def lift_query(id):
         #TODO add workout_ord when DB is updated
     elif request.method == 'DELETE':
         delete_lift = session.query(Lifts).filter_by(id=id).first()
+       # delete_set_lift = session.query(Sets).filter_by(id=delete_lift.id)
         session.query(Lifts).filter_by(id=id).delete()
         session.commit()
         return jsonify({"id":str(delete_lift.id), "workout":str(delete_lift.workout)
