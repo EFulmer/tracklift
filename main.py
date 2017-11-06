@@ -9,8 +9,10 @@ from sqlalchemy.orm import sessionmaker
 from models import Workouts, Lifts, Sets
 # from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # DB URL + dialect (postgresql) and driver (psycopg2)
 db_string = "postgresql+psycopg2://localhost/tracklift"
