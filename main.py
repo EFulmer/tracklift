@@ -38,14 +38,9 @@ def workout_query(id):
         return jsonify({"id":str(get_result.id),"day":str(get_result.day)})
     
     # if the API request is DELETE, delete all records associated with
-    # the <id> specificed in the url, included foreign keys (TODO) and 
-    # return a JSON containing the original result
+    # the <id> specificed in the url, and return a JSON containing the original result
     elif request.method == 'DELETE':
         delete_result = session.query(Workouts).filter_by(id=id).first()
-        # TODO: add foreign keys
-        # delete_result_lift = session.query(Lifts).filter_by(id=delete_result.id))
-        # delete_result_set = session.query(Sets).filter_by(id=delete_result_lift.id)
-        # session.query(Workouts).filter_by(id=id).delete()
         session.delete(delete_result)
         session.commit()
         return jsonify({"id":str(delete_result.id),"day":str(delete_result.day)})
@@ -56,8 +51,7 @@ def workout_query(id):
     elif request.method == 'PUT':
         put_result = session.query(Workouts).filter_by(id=id).first()
         update_result = datetime.strptime(request.get_json(force=True)['day'], '%m-%d-%Y')
-        new_result = session.query(Workouts) \
-                .filter_by(id=id).update({"day":update_result})
+        new_result = session.query(Workouts).filter_by(id=id).update({"day":update_result})
         session.commit()
         return jsonify({"id":str(put_result.id),"day":str(put_result.day)})
 
@@ -86,7 +80,6 @@ def lift_query(id):
         #TODO add workout_ord when DB is updated
     elif request.method == 'DELETE':
         delete_lift = session.query(Lifts).filter_by(id=id).first()
-       # delete_set_lift = session.query(Sets).filter_by(id=delete_lift.id)
         session.query(Lifts).filter_by(id=id).delete()
         session.commit()
         return jsonify({"id":str(delete_lift.id), "workout":str(delete_lift.workout)
