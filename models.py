@@ -13,7 +13,8 @@ class Workouts(Base):
     id = Column(Integer, primary_key = True, autoincrement = True)
     day = Column(Date, nullable = False)
 
-    lifts_relate = relationship("Lifts", back_populates =  "session")
+    lifts_relate = relationship("Lifts", cascade = "all, delete, delete-orphan" \
+            , single_parent = True, back_populates =  "session")
 
 class Lifts(Base):
     __tablename__ = 'lifts'
@@ -25,9 +26,9 @@ class Lifts(Base):
     lift_ord = Column(Integer, nullable = False)
 #    workout_ord = Column(Integer, nullable = False)
 
-    session = relationship("Workouts", cascade = "all, delete-orphan" \
-            , single_parent=True, back_populates = "lifts_relate")
-    sets_relate = relationship("Sets", back_populates = "lifts")
+    session = relationship("Workouts", back_populates = "lifts_relate")
+    sets_relate = relationship("Sets", cascade = "all, delete, delete-orphan" \
+            , single_parent = True, back_populates = "lifts")
 
 class Sets(Base):
     __tablename__ = 'sets'
@@ -41,5 +42,4 @@ class Sets(Base):
     notes = Column(Text, nullable = True)
     set_ord = Column(Integer, nullable = False)
 
-    lifts = relationship("Lifts", cascade = "all, delete-orphan" \
-            , single_parent=True,  back_populates = "sets_relate")
+    lifts = relationship("Lifts", back_populates = "sets_relate")
