@@ -1,7 +1,8 @@
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
+from flask_jsontools import JsonSerializableBase
 
-Base = declarative_base()
+Base = declarative_base(cls=(JsonSerializableBase,))
 
 from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, Text, Date
 from sqlalchemy.orm import sessionmaker
@@ -25,6 +26,8 @@ class Lifts(Base):
     name = Column(Text, nullable = False)
     lift_ord = Column(Integer, nullable = False)
 #    workout_ord = Column(Integer, nullable = False)
+    def as_dict(self):
+        return {c.name:getattr(self, c.name) for c in self.__table__.columns}
 
     session = relationship("Workouts", back_populates = "lifts_relate")
     sets_relate = relationship("Sets", cascade = "all, delete, delete-orphan" \
@@ -42,4 +45,8 @@ class Sets(Base):
     notes = Column(Text, nullable = True)
     set_ord = Column(Integer, nullable = False)
 
+    def sets_as_dict(self):
+        return {c.name:getattr(self, c.name) for c in self.__table__.columns}
+    
     lifts = relationship("Lifts", back_populates = "sets_relate")
+
