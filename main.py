@@ -35,8 +35,13 @@ def workout_query(id):
     # for the <id> specified in the url
     if request.method == 'GET':
         get_result =  session.query(Workouts).filter_by(id=id).first()
-        return jsonify({"id":str(get_result.id),"day":str(get_result.day)})
-    
+        if not get_result:
+            result = jsonify({"error":"No workout with id {} found".format(id)})
+            result.error_code = 400
+        else: result = jsonify({"id":str(get_result.id),"day":str(get_result.day)})
+        return result
+
+
     # if the API request is DELETE, delete all records associated with
     # the <id> specificed in the url, and return a JSON containing the original result
     elif request.method == 'DELETE':
@@ -65,11 +70,13 @@ def workout_query(id):
         session.add(post_result)
         session.commit()
         return jsonify({"id":str(post_result.id), "day":str(post_result.day)})
-
-    # TODO: error message as else
+    
+#    elif type(id) is not int:
+#        return jsonify({"error":"400 Bad Request"})
 
 @app.route('/lifts/<int:id>/', methods=['GET', 'PUT', 'DELETE'])
-@app.route('/lifts/', methods=['POST'], defaults={'id':None})
+# @app.route('/lifts/<int:workout_id'/>, methods=['GET']
+# TODO add query just for lifts based on a workout ID after line 81
 def lift_query(id):
     if request.method == 'GET':
         get_lift = session.query(Lifts).filter_by(id=id).first()
@@ -108,8 +115,16 @@ def lift_query(id):
 
     # TODO: error message as else
 
+@app.route('/workouts/lifts/<int:workout>/', methods=['GET'])
+def lift_from_workout(workout):
+    if request.method == 'GET':
+        lifts = session.query(Lifts).filter_by(workout=workout).all()
+        return jsonify({'lifts':list(map(Lifts.as_dict,lifts))})
+
+
 @app.route('/sets/<int:id>/', methods=['GET', 'PUT', 'DELETE'])
 @app.route('/sets/', methods=['POST'], defaults={'id':None})
+#TODO add query just for sets based on a workout or lift ID 
 def sets_query(id):
     if request.method == 'GET':
         get_sets = session.query(Sets).filter_by(id=id).first()
@@ -151,6 +166,12 @@ def sets_query(id):
                 , "set_ord":str(set_result.set_ord), "set_count":str(set_result.set_count)
                 , "rep_count":str(set_result.rep_count), "weight":str(set_result.weight)
                 , "warm_up":set_result.warm_up, "notes":set_result.notes})
+
+@app.route('/lifts/sets/<int:lift>/', methods=['GET'])
+def sets_from_lift(lift):
+    if request.method == 'GET':
+        sets = session.query(Sets).filter_by(lift=lift).all()
+        return jsonify({'sets':list(map(Sets.sets_as_dict, sets))})
 
 if __name__ == '__main__':
     app.run(debug=True)
