@@ -76,13 +76,16 @@ def workout_query(id):
 
 @app.route('/lifts/<int:id>/', methods=['GET', 'PUT', 'DELETE'])
 # @app.route('/lifts/<int:workout_id'/>, methods=['GET']
-# TODO add query just for lifts based on a workout ID after line 81
 def lift_query(id):
     if request.method == 'GET':
         get_lift = session.query(Lifts).filter_by(id=id).first()
-        return jsonify({"id":str(get_lift.id), "workout": str(get_lift.workout)
+        if not get_lift:
+            lift_error = jsonify({"error":"No Lift with id {} found.".format(id)})
+            lift_error.error_code= 400
+        else: lift_result = jsonify({"id":str(get_lift.id), "workout":str(get_lift.workout)
                 , "warm_up":get_lift.warm_up, "name":get_lift.name
                 , "lift_ord":str(get_lift.lift_ord)})
+        return lift_result
         
         #TODO add workout_ord when DB is updated
     elif request.method == 'DELETE':
@@ -113,8 +116,6 @@ def lift_query(id):
                 , "warm_up":lift_result.warm_up, "name":lift_result.name
                 , "lift_ord":str(lift_result.lift_ord)})
 
-    # TODO: error message as else
-
 @app.route('/workouts/lifts/<int:workout>/', methods=['GET'])
 def lift_from_workout(workout):
     if request.method == 'GET':
@@ -124,14 +125,18 @@ def lift_from_workout(workout):
 
 @app.route('/sets/<int:id>/', methods=['GET', 'PUT', 'DELETE'])
 @app.route('/sets/', methods=['POST'], defaults={'id':None})
-#TODO add query just for sets based on a workout or lift ID 
 def sets_query(id):
     if request.method == 'GET':
         get_sets = session.query(Sets).filter_by(id=id).first()
-        return jsonify({"id":str(get_sets.id), "lift":str(get_sets.lift)
+        if not get_sets:
+            set_error = jsonify({"Error":"No sets with id {} found".format(id)})
+            set_error.error_code = 400
+        else: set_error = jsonify({"id":str(get_sets.id), "lift":str(get_sets.lift)
                 , "set_ord":str(get_sets.set_ord), "set_count":str(get_sets.set_count)
                 , "rep_count":str(get_sets.rep_count), "weight":str(get_sets.weight)
                 , "warm_up":get_sets.warm_up, "notes":get_sets.notes})
+        return set_error
+
     
     elif request.method == 'DELETE':
         delete_set = session.query(Sets).filter_by(id=id).first()
