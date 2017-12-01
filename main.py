@@ -74,7 +74,7 @@ def workout_query(id):
 #    elif type(id) is not int:
 #        return jsonify({"error":"400 Bad Request"})
 
-@app.route('/lifts/<int:id>/', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/lifts/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 # @app.route('/lifts/<int:workout_id'/>, methods=['GET']
 def lift_query(id):
     if request.method == 'GET':
@@ -123,7 +123,7 @@ def lift_from_workout(workout):
         return jsonify({'lifts':list(map(Lifts.as_dict,lifts))})
 
 
-@app.route('/sets/<int:id>/', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/sets/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @app.route('/sets/', methods=['POST'], defaults={'id':None})
 def sets_query(id):
     if request.method == 'GET':
@@ -140,7 +140,7 @@ def sets_query(id):
     
     elif request.method == 'DELETE':
         delete_set = session.query(Sets).filter_by(id=id).first()
-        session.query(Lifts).filter_by(id=id).delete()
+        session.query(Sets).filter_by(id=id).delete()
         session.commit()
         return jsonify({"id":str(delete_set.id), "lift":str(delete_set.lift)
                 , "set_ord":str(delete_set.set_ord), "set_count":str(delete_set.set_count)
