@@ -179,4 +179,4 @@ def sets_from_lift(lift):
         return jsonify({'sets':list(map(Sets.sets_as_dict, sets))})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
